@@ -1,0 +1,15 @@
+controller_list:
+  - name: fake_hc10_arm_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - alexjoint_1_s
+      - alexjoint_2_l
+      - alexjoint_3_u
+      - alexjoint_4_r
+      - alexjoint_5_b
+      - alexjoint_6_t
+initial:  # Define initial robot poses per group
+#  - group: hc10_arm
+#    pose: home
+
+  []

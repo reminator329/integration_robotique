@@ -1,0 +1,34 @@
+   
+arm_controller:
+    type: effort_controllers/JointTrajectoryController
+    joints:
+        - alexjoint_1_s
+        - alexjoint_2_l
+        - alexjoint_3_u
+        - alexjoint_4_r
+        - alexjoint_5_b
+        - alexjoint_6_t
+    gains:
+        alexjoint_1_s: { p: 100, d: 0, i: 1, i_clamp: 1 }
+        alexjoint_2_l: { p: 100, d: 0, i: 1, i_clamp: 1 }
+        alexjoint_3_u: { p: 100, d: 0, i: 1, i_clamp: 1 }
+        alexjoint_4_r: { p: 100, d: 0, i: 1, i_clamp: 1 }
+        alexjoint_5_b: { p: 100, d: 0, i: 1, i_clamp: 1 }
+        alexjoint_6_t: { p: 100, d: 0, i: 1, i_clamp: 1 }
+
+    constraints:
+        goal_time: 2.0
+    state_publish_rate: 25
+
+controller_list:
+    - name: arm_controller
+      action_ns: follow_joint_trajectory
+      type: FollowJointTrajectory
+      default: true
+      joints:
+        - alexjoint_1_s
+        - alexjoint_2_l
+        - alexjoint_3_u
+        - alexjoint_4_r
+        - alexjoint_5_b
+        - alexjoint_6_t

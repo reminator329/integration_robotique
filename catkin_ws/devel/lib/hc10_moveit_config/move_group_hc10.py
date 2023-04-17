@@ -1,0 +1,1 @@
+/home/etudiant/Bureau/catkin_ws/devel/.private/hc10_moveit_config/lib/hc10_moveit_config/move_group_hc10.py

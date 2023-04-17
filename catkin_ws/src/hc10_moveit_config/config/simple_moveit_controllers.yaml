@@ -1,0 +1,12 @@
+controller_list:
+  - name: arm_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - alexjoint_1_s
+      - alexjoint_2_l
+      - alexjoint_3_u
+      - alexjoint_4_r
+      - alexjoint_5_b
+      - alexjoint_6_t
