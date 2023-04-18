@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="hc10_gazebo" params="prefix">
+  
+      <xacro:macro name="arm_gazebo" params="link">
+          <gazebo reference="${link}">
+              <material>Gazebo/White</material>
+              <mu1>0.2</mu1>
+              <mu2>0.2</mu2>
+          </gazebo>
+      </xacro:macro>
+      <xacro:arm_gazebo link="${prefix}link_1_s"/>
+      <xacro:arm_gazebo link="${prefix}link_2_l"/>
+      <xacro:arm_gazebo link="${prefix}link_3_u"/>
+      <xacro:arm_gazebo link="${prefix}link_4_r"/>
+      <xacro:arm_gazebo link="${prefix}link_5_b"/>
+      <xacro:arm_gazebo link="${prefix}link_6_t"/>
+      <xacro:arm_gazebo link="${prefix}tool0"/>
+      <xacro:arm_gazebo link="${prefix}base_link-base"/>
+  </xacro:macro>
+  
+</robot>
