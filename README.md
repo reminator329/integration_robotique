@@ -42,6 +42,11 @@ Cependant, dans un premier temps, le capteur ne pouvait donner d'information car
 
 Le capteur extéroceptif disponible, on peut alors reconstruire à partir du nuage de points, une octomap caractérisant l'environnement.
 
+Ci-dessous, des exemples de reconstruction de l'environnement avec un puis quatre objets sur la carte.
+
+![](rapport_images/mapping_one_box.png)
+![](rapport_images/mapping_one_box_gazebo.png)
+
 ![](rapport_images/mapping_four_box.png)
 ![](rapport_images/mapping_four_box_gazebo.png)
 
