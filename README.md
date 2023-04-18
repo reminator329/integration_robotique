@@ -42,6 +42,9 @@ Cependant, dans un premier temps, le capteur ne pouvait donner d'information car
 
 Le capteur extéroceptif disponible, on peut alors reconstruire à partir du nuage de points, une octomap caractérisant l'environnement.
 
+![](rapport_images/mapping_four_box.png)
+![](rapport_images/mapping_four_box_gazebo.png)
+
 ### Intérêt de la simulation
 
 L'intérêt notable de ce travail a été de construire et réaliser un environnement de simulation proche et représentatif de la réalité. On pourrait alors représenter extrêmement facilement l'environnement d'un vrai bras robotique HC10, en le mappant, mais également contrôler ce bras via les différents noeuds ROS mis en place durant la création de cette simulation.
