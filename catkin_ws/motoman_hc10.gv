@@ -1,0 +1,38 @@
+digraph G {
+node [shape=box];
+"world" [label="world"];
+"alexbase_link" [label="alexbase_link"];
+"alexbase" [label="alexbase"];
+"alexlink_1_s" [label="alexlink_1_s"];
+"alexlink_2_l" [label="alexlink_2_l"];
+"alexlink_3_u" [label="alexlink_3_u"];
+"alexlink_4_r" [label="alexlink_4_r"];
+"alexlink_5_b" [label="alexlink_5_b"];
+"alexlink_6_t" [label="alexlink_6_t"];
+"alextool0" [label="alextool0"];
+"camera_depth_frame" [label="camera_depth_frame"];
+"camera_depth_optical_frame" [label="camera_depth_optical_frame"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"world" -> "world_fixed" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"world_fixed" -> "alexbase_link"
+"alexbase_link" -> "alexbase_link-base" [label="xyz: 0 0 0.275 \nrpy: 0 -0 0"]
+"alexbase_link-base" -> "alexbase"
+"alexbase_link" -> "alexjoint_1_s" [label="xyz: 0 0 0.275 \nrpy: 0 -0 0"]
+"alexjoint_1_s" -> "alexlink_1_s"
+"alexlink_1_s" -> "alexjoint_2_l" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"alexjoint_2_l" -> "alexlink_2_l"
+"alexlink_2_l" -> "alexjoint_3_u" [label="xyz: 0 0 0.7 \nrpy: 0 -0 0"]
+"alexjoint_3_u" -> "alexlink_3_u"
+"alexlink_3_u" -> "alexjoint_4_r" [label="xyz: 0 0 -0.5 \nrpy: 0 -0 0"]
+"alexjoint_4_r" -> "alexlink_4_r"
+"alexlink_4_r" -> "alexjoint_5_b" [label="xyz: 0 0.162 0 \nrpy: 0 -0 0"]
+"alexjoint_5_b" -> "alexlink_5_b"
+"alexlink_5_b" -> "alexjoint_6_t" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"alexjoint_6_t" -> "alexlink_6_t"
+"alexlink_6_t" -> "alexjoint_6_t-tool0" [label="xyz: 0 0 -0.13 \nrpy: 3.14159 -0 0"]
+"alexjoint_6_t-tool0" -> "alextool0"
+"alextool0" -> "camera_joint" [label="xyz: 0.15 -1 0.1 \nrpy: 0 -0 1.57"]
+"camera_joint" -> "camera_depth_frame"
+"camera_depth_frame" -> "camera_optical_joint" [label="xyz: 0.15 -1 0.1 \nrpy: 0 -0 1.57"]
+"camera_optical_joint" -> "camera_depth_optical_frame"
+}

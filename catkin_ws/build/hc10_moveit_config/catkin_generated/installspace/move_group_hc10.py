@@ -23,6 +23,8 @@ except:  # For Python 2 compatibility
 from std_msgs.msg import String
 from moveit_commander.conversions import pose_to_list
 import time
+import math
+import random
 
 class RobotPlanner:
     def __init__(self, waypoints):
@@ -32,15 +34,10 @@ class RobotPlanner:
         self.robot = moveit_commander.RobotCommander()
 
         self.scene = moveit_commander.PlanningSceneInterface()
-        
+
         self.group_name = "hc10_arm"
         self.move_group = moveit_commander.MoveGroupCommander(self.group_name)
-
-        self.display_trajectory_publisher = rospy.Publisher(
-        "/move_group/display_planned_path",
-        moveit_msgs.msg.DisplayTrajectory,
-        queue_size=20)
-
+        
         self.waypoints = waypoints
         self.scale = 1.
         self.init_pose = self.move_group.get_current_pose().pose
@@ -65,15 +62,6 @@ class RobotPlanner:
         print("============ Printing robot state")
         print(self.robot.get_current_state())
         print("")
-        ## Create a `DisplayTrajectory`_ ROS publisher which is used to display
-        ## trajectories in Rviz:
-        self.display_trajectory_publisher = rospy.Publisher(
-            "/move_group/display_planned_path",
-            moveit_msgs.msg.DisplayTrajectory,
-            queue_size=20,
-        )
-        time.sleep(1)
-        self.create_box()
     
     def create_box(self):
         print("Create box")
@@ -88,81 +76,60 @@ class RobotPlanner:
         self.scene.add_box(box_name, box_pose, size=(size, size, size))
     
     def goal(self):
-        self.pose_goal = geometry_msgs.msg.Pose()
-        self.pose_goal.orientation.w = 1.0
-        self.pose_goal.position.x = 0.9
-        self.pose_goal.position.y = 0.1
-        self.pose_goal.position.z = 0.9
 
-        print("Before target")
-        self.move_group.set_pose_target(self.pose_goal)
-        print("After target")
+        self.pose_goal1 = geometry_msgs.msg.Pose()
+        self.pose_goal1.orientation.w = 1.0
+        self.pose_goal1.position.x = 0.66
+        self.pose_goal1.position.y = 0
+        self.pose_goal1.position.z = 0.9
 
-        self.success = self.move_group.go(wait=True)
-        # Calling `stop()` ensures that there is no residual movement
-        self.move_group.stop()
-        # It is always good to clear your targets after planning with poses.
-        # Note: there is no equivalent function for clear_joint_value_targets().
-        self.move_group.clear_pose_targets()
+        self.pose_goal2 = geometry_msgs.msg.Pose()
+        self.pose_goal2.orientation.w = 1.0
+        self.pose_goal2.position.x = 0.66
+        self.pose_goal2.position.y = 0.66
+        self.pose_goal2.position.z = 0.9
 
-        print("Before target2")
-        self.move_group.set_pose_target(self.init_pose)
-        self.success = self.move_group.go(wait=True)
-        print("After target2")
+        self.pose_goal3 = geometry_msgs.msg.Pose()
+        self.pose_goal3.orientation.w = 1.0
+        self.pose_goal3.position.x = -0.66
+        self.pose_goal3.position.y = 0
+        self.pose_goal3.position.z = 0.9
 
-        # Calling `stop()` ensures that there is no residual movement
-        self.move_group.stop()
-        # It is always good to clear your targets after planning with poses.
-        # Note: there is no equivalent function for clear_joint_value_targets().
-        self.move_group.clear_pose_targets()
+        self.pose_goal4 = geometry_msgs.msg.Pose()
+        self.pose_goal4.orientation.w = 1.0
+        self.pose_goal4.position.x = -0.66
+        self.pose_goal4.position.y = -0.66
+        self.pose_goal4.position.z = 0.9
 
-    def cartesian_path(self):
-        wpose = self.move_group.get_current_pose().pose
-        wpose.position.z -= self.scale * 0.1  # First move up (z)
-        wpose.position.y += self.scale * 0.2  # and sideways (y)
-        self.waypoints.append(copy.deepcopy(wpose))
+        self.pose_goal5 = geometry_msgs.msg.Pose()
+        self.pose_goal5.orientation.w = 1.0
+        self.pose_goal5.position.x = math.cos(random.random()*2*math.pi)
+        self.pose_goal5.position.y = math.sin(random.random()*2*math.pi)
+        self.pose_goal5.position.z = 0.9 + random.random()*0.1
 
-        wpose.position.x += self.scale * 0.1  # Second move forward/backwards in (x)
-        self.waypoints.append(copy.deepcopy(wpose))
+        self.pose_goal6 = geometry_msgs.msg.Pose()
+        self.pose_goal6.orientation.w = 1.0
+        self.pose_goal6.position.x = math.cos(random.random()*2*math.pi)
+        self.pose_goal6.position.y = math.sin(random.random()*2*math.pi)
+        self.pose_goal6.position.z = 0.9 + random.random()*0.1
 
-        wpose.position.y -= self.scale * 0.1  # Third move sideways (y)
-        self.waypoints.append(copy.deepcopy(wpose))
+        goals = [self.pose_goal1, self.pose_goal2, self.pose_goal3, self.pose_goal4 ]
+        
+        for goal in goals:
+                
+            self.move_group.set_pose_target(goal)
 
-        # We want the Cartesian path to be interpolated at a resolution of 1 cm
-        # which is why we will specify 0.01 as the eef_step in Cartesian
-        # translation.  We will disable the jump threshold by setting it to 0.0,
-        # ignoring the check for infeasible jumps in joint space, which is sufficient
-        # for this tutorial.
-        (self.plan, self.fraction) = self.move_group.compute_cartesian_path(
-            self.waypoints, 0.01, 0.0  # waypoints to follow  # eef_step
-        )  # jump_thresholdplanner
-
-    def display_path(self):
-        display_trajectory = moveit_msgs.msg.DisplayTrajectory()
-        display_trajectory.trajectory_start = self.robot.get_current_state()
-        display_trajectory.trajectory.append(self.plan)
-        # Publish
-        self.display_trajectory_publisher.publish(display_trajectory)
-
-    def execute(self):
-        self.move_group.execute(self.plan, wait=True)
+            self.success = self.move_group.go(wait=True)
+            # Calling `stop()` ensures that there is no residual movement
+            self.move_group.stop()
+            # It is always good to clear your targets after planning with poses.
+            # Note: there is no equivalent function for clear_joint_value_targets().
+            self.move_group.clear_pose_targets()
     
+        
 def main():
     planner = RobotPlanner([])
-    """ with open('/home/etudiant/Bureau/catkin_ws/src/motoman/motoman_hc10_support/urdf/box.urdf') as f:
-        box = f.read()
-    # Appel du service de spawn de modèle Gazebo
-    spawn_model = rospy.ServiceProxy('/gazebo/spawn_urdf_model', SpawnModel)
-    spawn_model('box', box, [1.,0.66, 0 ,0.4],'world') """
-    
-    # Attente de 5 secondes pour que Gazebo ait le temps de charger l'objet
-    """ rospy.sleep(5)  """   
-    print("Before GOAL")
     planner.goal()
-    print("After GOAL")
-    # planner.cartesian_path()
-    # planner.execute()
-    # planner.display_path()
 
 if __name__ == '__main__':
     main()
